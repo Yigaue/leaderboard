@@ -1,12 +1,14 @@
 package com.leaderboard.task.model;
 
 import java.sql.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -27,6 +29,9 @@ public class User {
 
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @OneToMany(mappedBy = "task")
+    private List<Task> tasks;
 
     /**
      * @return Long return the id
@@ -124,6 +129,21 @@ public class User {
      */
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+
+    /**
+     * @return List<Task> return the tasks
+     */
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    /**
+     * @param tasks the task to set
+     */
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
 }
