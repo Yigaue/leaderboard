@@ -1,5 +1,6 @@
 package com.leaderboard.task.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import javax.persistence.Column;
@@ -9,11 +10,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.leaderboard.task.enumeration.TaskStatus;
 
 @Entity
-public class Task {
+@Table(name = "tasks")
+@JsonIgnoreProperties({"hibernateLadyIntializer", "hanlder"})
+public class Task implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,15 +29,21 @@ public class Task {
     private String points;
     private TaskStatus status;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Column(name = "created_at")
     private Date createdAt;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Column(name = "updated_at")
     private Date updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Task() {
+        //
+    }
 
     /**
      * @return Long return the Id
