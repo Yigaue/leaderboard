@@ -4,35 +4,39 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", 
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
 @JsonIgnoreProperties({"hibernateLadyIntializer", "handler"})
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(name = "first_name")
     private String firstName;
 
     @Column(name = "last_name")
     private String lastName;
 
+    @Email
     private String email;
     private String password;
+
+    @Transient
+    private String passwordConfirm;
 
     @Column(name = "created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
@@ -161,6 +165,21 @@ public class User implements Serializable {
      */
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+
+    /**
+     * @return String return the passwordConfirm
+     */
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    /**
+     * @param passwordConfirm the passwordConfirm to set
+     */
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 
 }
