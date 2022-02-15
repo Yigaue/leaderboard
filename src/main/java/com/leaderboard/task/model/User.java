@@ -2,7 +2,9 @@ package com.leaderboard.task.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,7 +14,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Data;
+
 @Entity
+@Data
 @Table(name = "users", 
     uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
@@ -34,6 +39,7 @@ public class User implements Serializable {
     @Email
     private String email;
     private String password;
+    private String username;
 
     @Transient
     private String passwordConfirm;
@@ -50,8 +56,18 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
 
-    public User() {
-        //
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+        
+    private Set<Role> roles;
+
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
     }
 
     /**
@@ -180,6 +196,36 @@ public class User implements Serializable {
      */
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
+    }
+
+
+    /**
+     * @return String return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
+    /**
+     * @return Set<Role> return the roles
+     */
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    /**
+     * @param roles the roles to set
+     */
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
 }
