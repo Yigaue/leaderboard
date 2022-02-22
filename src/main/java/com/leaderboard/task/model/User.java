@@ -1,8 +1,7 @@
 package com.leaderboard.task.model;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +24,8 @@ import lombok.Data;
 @JsonIgnoreProperties({"hibernateLadyIntializer", "handler"})
 public class User implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,12 +46,12 @@ public class User implements Serializable {
     private String passwordConfirm;
 
     @Column(name = "created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date updatedAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private final LocalDateTime updatedAt = LocalDateTime.now();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
@@ -143,31 +144,16 @@ public class User implements Serializable {
     /**
      * @return Date return the createdAt
      */
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    /**
-     * @param createdAt the createdAt to set
-     */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     /**
      * @return Date return the updatedAt
      */
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
-    /**
-     * @param updatedAt the updatedAt to set
-     */
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
 
     /**
      * @return List<Task> return the tasks
@@ -197,7 +183,6 @@ public class User implements Serializable {
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
     }
-
 
     /**
      * @return String return the username

@@ -2,6 +2,7 @@ package com.leaderboard.task.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
@@ -13,6 +14,7 @@ import com.leaderboard.task.enumeration.TaskStatus;
 @Table(name = "tasks")
 @JsonIgnoreProperties({"hibernateLadyIntializer", "hanlder"})
 public class Task implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +27,13 @@ public class Task implements Serializable {
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Column(name = "created_at")
-    private Date createdAt;
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private final LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -114,31 +116,16 @@ public class Task implements Serializable {
     /**
      * @return Date return the createdAt
      */
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    /**
-     * @param createdAt the createdAt to set
-     */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     /**
      * @return Date return the updatedAt
      */
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
-    /**
-     * @param updatedAt the updatedAt to set
-     */
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
 
     /**
      * @return User return the user
